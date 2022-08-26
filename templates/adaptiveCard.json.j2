@@ -1,0 +1,36 @@
+{
+    "type": "AdaptiveCard",
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.4",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "Speiseplan",
+            "wrap": true,
+            "size": "ExtraLarge",
+            "weight": "Bolder",
+            "color": "Default",
+            "fontType": "Monospace"
+        },
+        {
+            "type": "TextBlock",
+            "wrap": true,
+            "text": "{{ tag_heute }}.{{ monat_heute }}.{{ jahr_heute }}"
+        },
+        {
+            "type": "Image",
+            "url": "https://boehringer.webspeiseplan.de/images/bg_wizard.jpg"
+        },
+        {
+            "type": "FactSet",
+            "facts": [
+              {% for gericht in essen_heute %}
+                {
+                    "title": "{{ gericht.gericht_name }}",
+                    "value": "{{ gericht.preis }}"
+                }{%if loop.index < essen_heute | length %},{% endif %}
+            {% endfor %}
+            ]
+        }
+    ]
+}
