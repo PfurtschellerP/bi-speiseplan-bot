@@ -47,7 +47,15 @@
 
     - name: Extrahiere Plan URL
       ansible.builtin.set_fact:
-        planURL: '{{ ( plan_pdf | from_json ).content }}'
+        planURL: '{{ plan_pdf.content }}'
+
+    - name: DEBUG
+      ansible.builtin.debug:
+        var: plan_pdf
+
+    - name: DEBUG
+      ansible.builtin.debug:
+        var: planURL
 
     - name: Hole den aktuellen Tag
       ansible.builtin.set_fact:
