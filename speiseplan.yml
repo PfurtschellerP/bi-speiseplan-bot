@@ -34,7 +34,8 @@
         tag_heute: '{{ ansible_date_time["iso8601"].split("T")[0].split("-")[2] }}'
         gericht_daten: '{{ mir2.speiseplanGerichtData }}'
 
-    - debug:
+    - name: DEBUG
+      ansible.builtin.debug:
         msg: 'Tag: {{ tag_heute }} Monat: {{ monat_heute }} Jahr: {{ jahr_heute }}'
 
     - name: Temporärer Override des Datums
@@ -75,3 +76,11 @@
           - ./adaptiveCard.json
         charset: utf-8
       delegate_to: localhost
+
+    - name: Sende den Speiseplan an MS Teams
+      ansible.builtin.uri:
+        url: https://boehringer.webhook.office.com/webhookb2/5976d88b-6701-4591-9b4d-e9e30fb1b8f4@e1f8af86-ee95-4718-bd0d-375b37366c83/IncomingWebhook/9321e0ace2b246b193eed950fe755972/e52bbddb-ec55-401c-a801-c5699b888d03
+        method: POST
+        body: "{{ lookup('ansible.builtin.file','adaptiveCard.json') }}"
+        status_code: 200
+        body_format: json
