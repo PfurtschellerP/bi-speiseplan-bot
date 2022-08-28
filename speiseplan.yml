@@ -37,12 +37,12 @@
     - debug:
         msg: 'Tag: {{ tag_heute }} Monat: {{ monat_heute }} Jahr: {{ jahr_heute }}'
 
-    # - name: Temporärer Override des Datums
-    #   ansible.builtin.set_fact:
-    #     datum_heute: '2022-08-29T00:00:00'
-    #     jahr_heute: '2022'
-    #     monat_heute: '08'
-    #     tag_heute: '29'
+    - name: Temporärer Override des Datums
+      ansible.builtin.set_fact:
+        datum_heute: '2022-08-29T00:00:00'
+        jahr_heute: '2022'
+        monat_heute: '08'
+        tag_heute: '29'
 
     - name: Extrahiere heutige Gerichte
       ansible.builtin.set_fact:
@@ -60,3 +60,18 @@
         src: 'adaptiveCard.json.j2'
         dest: './adaptiveCard.json'
         mode: 0600
+
+    - name: Send mir eine Email mit der Speiseplan adaptive card
+      community.general.mail:
+        host: '{{ smtp_host }}'
+        port: '{{ smtp_port }}'
+        subject: Speiseplan
+        username: '{{ smtp_user }}'
+        password: '{{ smtp_pass }}'
+        body: Hallo, hier ist der Speiseplan
+        to:
+          - Patrick Pfurtscheller <patrick@pfurtscheller.org>
+        attach:
+          - ./adaptiveCard.json
+        charset: utf-8
+      delegate_to: localhost
