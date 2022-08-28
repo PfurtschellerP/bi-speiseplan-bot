@@ -98,7 +98,7 @@
     # -------------------------------------------------------------------------
     - name: Hole neues Gif von Giphy
       ansible.builtin.uri:
-        url: 'https://api.giphy.com/v1/gifs/search?api_key={{ api_key }}&limit=1&q=essen'
+        url: 'https://api.giphy.com/v1/gifs/search?api_key={{ api_key }}&limit=1&offset={{ 100 | random }}}&q=essen'
         return_content: true
         validate_certs: false
       register: giphy
