@@ -4,6 +4,7 @@
   connection: local
   vars:
     test: '{{ TEST | bool | default(false) }}'
+    time_override: '{{ TIME_OVERRIDE | bool | default(false) }}'
     override:
       tag: 'OVERRIDE_TAG | default("")'
       monat: 'OVERRIDE_MONAT | default("")'
@@ -49,7 +50,7 @@
         monat_heute: '{{ override.monat }}'
         tag_heute: '{{ override.tag }}'
         datum_heute: '{{ override.jahr }}-{{ override.monat }}-{{ override.tag }}T00:00:00'
-      when: test
+      when: time_override
 
     - name: Extrahiere heutige Gerichte
       ansible.builtin.set_fact:
