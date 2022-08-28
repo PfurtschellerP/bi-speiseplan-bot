@@ -1,0 +1,136 @@
+---
+# 1) Hole und reinige die Plan Daten
+# -------------------------------------------------------------------------
+- name: Hole die Plan Daten
+  ansible.builtin.uri:
+    url: https://boehringer.webspeiseplan.de/index.php?token=2fda60f9e49030893165d438b7b4e946&model=menu&location=1100&languagetype=1&time={{ ansible_date_time["epoch"] }}000
+    method: GET
+    return_content: true
+    validate_certs: false
+    headers:
+      Host: boehringer.webspeiseplan.de
+      Referer: https://boehringer.webspeiseplan.de/Menu
+  register: plan_daten
+
+- name: Extrahiere die Plan Daten für diese und nächste Woche
+  ansible.builtin.set_fact:
+    mir2: '{{ mir2 | default([]) + [item] }}'
+  with_items: '{{ plan_daten.json.content }}'
+  when: item.speiseplanAdvanced.titel == "Ingelheim MIR 2"
+
+- name: Extrahiere die Daten für diese Woche
+  ansible.builtin.set_fact:
+    mir2: '{{ mir2[0] }}'
+
+- name: Hole das Plan PDF
+  ansible.builtin.uri:
+    url: https://boehringer.webspeiseplan.de/index.php?token=2fda60f9e49030893165d438b7b4e946&request=pdf&menu=2058&time={{ ansible_date_time["epoch"] }}000&lang=1&cw={{ ansible_date_time.weeknumber }}"
+    method: GET
+    return_content: true
+    validate_certs: false
+    headers:
+      Host: boehringer.webspeiseplan.de
+      Referer: https://boehringer.webspeiseplan.de/Menu
+  register: plan_pdf
+
+- name: Extrahiere Plan URL
+  ansible.builtin.set_fact:
+    plan_url: '{{ plan_pdf.json.content }}'
+
+- name: DEBUG
+  ansible.builtin.debug:
+    var: plan_pdf
+
+- name: DEBUG
+  ansible.builtin.debug:
+    var: plan_url
+
+- name: Hole den aktuellen Tag
+  ansible.builtin.set_fact:
+    datum_heute: '{{ ansible_date_time["iso8601"].split("T")[0] }}T00:00:00'
+    jahr_heute: '{{ ansible_date_time["iso8601"].split("T")[0].split("-")[0] }}'
+    monat_heute: '{{ ansible_date_time["iso8601"].split("T")[0].split("-")[1] }}'
+    tag_heute: '{{ ansible_date_time["iso8601"].split("T")[0].split("-")[2] }}'
+    gericht_daten: '{{ mir2.speiseplanGerichtData }}'
+
+- name: DEBUG
+  ansible.builtin.debug:
+    msg: 'Tag: {{ tag_heute }} Monat: {{ monat_heute }} Jahr: {{ jahr_heute }}'
+
+- name: Temporärer Override des Datums
+  ansible.builtin.set_fact:
+    jahr_heute: '{{ override.jahr }}'
+    monat_heute: '{{ override.monat }}'
+    tag_heute: '{{ override.tag }}'
+    datum_heute: '{{ override.jahr }}-{{ override.monat }}-{{ override.tag }}T00:00:00'
+  when: time_override
+
+- name: DEBUG
+  ansible.builtin.debug:
+    msg: 'Tag: {{ tag_heute }} Monat: {{ monat_heute }} Jahr: {{ jahr_heute }}'
+  when: time_override
+
+- name: Extrahiere heutige Gerichte
+  ansible.builtin.set_fact:
+    essen_heute: |
+      {{ essen_heute | default([]) + [{
+          "gericht_name":item.speiseplanAdvancedGericht.gerichtname,
+          "preis": (item.zusatzinformationen.mitarbeiterpreisDecimal2 |string).replace(".", ",")+"€"
+        }]
+      }}
+  with_items: '{{ gericht_daten | list }}'
+  when: item.speiseplanAdvancedGericht.datum == datum_heute
+# -------------------------------------------------------------------------
+
+# 2) Hole ein tagesaktuelles Gif von Giphy
+# -------------------------------------------------------------------------
+- name: Generiere Zufällige Nummer für das offset bei Giffy
+  ansible.builtin.set_fact:
+    offset: '{{ 100 | random }}'
+
+- name: Hole neues Gif von Giphy
+  ansible.builtin.uri:
+    url: 'https://api.giphy.com/v1/gifs/search?api_key={{ api_key }}&limit=1&offset={{ offset }}&q=essen'
+    return_content: true
+    validate_certs: false
+  register: giphy
+
+- name: Hole Inhalt
+  ansible.builtin.set_fact:
+    giphy_image: '{{ giphy.json.data[0].images.original.url }}'
+# -------------------------------------------------------------------------
+
+# 3) Erstelle das JSON Payload für die Teams Nachricht und sende ihn entweder per mail (test) oder an MS Teams
+# -------------------------------------------------------------------------
+- name: Create Adaptive Card
+  ansible.builtin.template:
+    src: 'adaptiveCard.json.j2'
+    dest: './adaptiveCard.json'
+    mode: 0600
+
+- name: Send mir eine Email mit der Speiseplan adaptive card
+  community.general.mail:
+    host: '{{ smtp_server }}'
+    port: '{{ smtp_port }}'
+    subject: Speiseplan
+    username: '{{ smtp_user }}'
+    password: '{{ smtp_pass }}'
+    from: no-reply@pfurtscheller.org (AWX)
+    body: Hallo, hier ist der Speiseplan
+    to:
+      - Patrick Pfurtscheller <patrick@pfurtscheller.org>
+    attach:
+      - ./adaptiveCard.json
+    charset: utf-8
+  delegate_to: localhost
+  when: test
+
+- name: Sende den Speiseplan an MS Teams
+  ansible.builtin.uri:
+    url: '{{ webhook_url }}'
+    method: POST
+    body: "{{ lookup('ansible.builtin.file', 'adaptiveCard.json') }}"
+    status_code: 200
+    body_format: json
+  when: not test
+# -------------------------------------------------------------------------
