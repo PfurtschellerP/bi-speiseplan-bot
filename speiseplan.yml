@@ -27,7 +27,7 @@
     - name: Extrahiere die Plan Daten für diese und nächste Woche
       ansible.builtin.set_fact:
         mir2: '{{ mir2 | default([]) + [item] }}'
-      with_items: '{{ (plan_daten.content | from_json).content }}'
+      with_items: '{{ plan_daten.json.content }}'
       when: item.speiseplanAdvanced.titel == "Ingelheim MIR 2"
 
     - name: Extrahiere die Daten für diese Woche
@@ -47,7 +47,7 @@
 
     - name: Extrahiere Plan URL
       ansible.builtin.set_fact:
-        planURL: '{{ plan_pdf.content | from_json }}'
+        planURL: '{{ plan_pdf.json.content }}'
 
     - name: DEBUG
       ansible.builtin.debug:
@@ -105,7 +105,7 @@
 
     - name: Hole Inhalt
       ansible.builtin.set_fact:
-        giphy_image: '{{ (giphy.content | from_json).data[0].images.original.url }}'
+        giphy_image: '{{ giphy.json.data[0].images.original.url }}'
     # -------------------------------------------------------------------------
 
     # 3) Erste das JSON Payload für die Teams Nachricht und sende ihn entweder per mail (test) oder an MS Teams
