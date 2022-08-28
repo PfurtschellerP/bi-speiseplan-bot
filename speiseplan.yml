@@ -52,6 +52,11 @@
         datum_heute: '{{ override.jahr }}-{{ override.monat }}-{{ override.tag }}T00:00:00'
       when: time_override
 
+    - name: DEBUG
+      ansible.builtin.debug:
+        msg: 'Tag: {{ tag_heute }} Monat: {{ monat_heute }} Jahr: {{ jahr_heute }}'
+      when: time_override
+
     - name: Extrahiere heutige Gerichte
       ansible.builtin.set_fact:
         essen_heute: |
