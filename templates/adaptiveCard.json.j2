@@ -29,17 +29,39 @@
                     "url": "https://boehringer.webspeiseplan.de/images/bg_wizard.jpg"
                 },
                 {
-                    "type": "FactSet",
-                    "facts": [
-                    {% for gericht in essen_heute %}
+                    "type": "TextBlock",
+                    "wrap": true,
+                    "text": "Karte Heute",
+                    "weight": "Bolder",
+                    "size": "Large",
+                    "fontType": "Monospace"
+                },
+                {% for gericht in essen_heute %}
+                {
+                    "type": "Container",
+                    "items": [
                         {
-                            "title": "{{ gericht.gericht_name }}",
-                            "value": "{{ gericht.preis }}"
-                        }{%if loop.index < essen_heute | length %},{% endif %}
-                    {% endfor %}
-                    ]
-                }
-            ]
+                            "type": "TextBlock",
+                            "wrap": true,
+                            "text": "{{ gericht.name }}",
+                            "fontType": "Monospace",
+                            "size": "Medium",
+                            "weight": "Bolder"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "wrap": true,
+                            "horizontalAlignment": "Right",
+                            "text": "{{ gericht.preis }}",
+                            "fontType": "Monospace",
+                            "size": "Default"
+                        }
+                    ],
+                    "separator": true
+                }{%if loop.index < essen_heute | length %},{% endif %}
+                {% endfor %}
+            ],
+            "verticalContentAlignment": "Top"
         }
     }
   ]
