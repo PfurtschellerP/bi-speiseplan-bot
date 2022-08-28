@@ -6,9 +6,9 @@
     test: '{{ TEST | bool | default(false) }}'
     time_override: '{{ TIME_OVERRIDE | bool | default(false) }}'
     override:
-      tag: 'OVERRIDE_TAG | default("")'
-      monat: 'OVERRIDE_MONAT | default("")'
-      jahr: 'OVERRIDE_JAHR | default("")'
+      tag: '{{ OVERRIDE_TAG | default("") }}'
+      monat: '{{ OVERRIDE_MONAT | default("") }}'
+      jahr: '{{ OVERRIDE_JAHR | default("") }}'
 
   tasks:
     - name: Hole die Plan Daten
