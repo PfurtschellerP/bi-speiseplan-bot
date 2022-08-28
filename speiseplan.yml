@@ -47,7 +47,7 @@
 
     - name: Extrahiere Plan URL
       ansible.builtin.set_fact:
-        planURL: '{{ plan_pdf.json.content }}'
+        plan_url: '{{ plan_pdf.json.content }}'
 
     - name: DEBUG
       ansible.builtin.debug:
@@ -55,7 +55,7 @@
 
     - name: DEBUG
       ansible.builtin.debug:
-        var: planURL
+        var: plan_url
 
     - name: Hole den aktuellen Tag
       ansible.builtin.set_fact:
@@ -135,9 +135,9 @@
 
     - name: Sende den Speiseplan an MS Teams
       ansible.builtin.uri:
-        url: https://boehringer.webhook.office.com/webhookb2/5976d88b-6701-4591-9b4d-e9e30fb1b8f4@e1f8af86-ee95-4718-bd0d-375b37366c83/IncomingWebhook/9321e0ace2b246b193eed950fe755972/e52bbddb-ec55-401c-a801-c5699b888d03
+        url: '{{ webhook_url }}'
         method: POST
-        body: "{{ lookup('ansible.builtin.file','adaptiveCard.json') }}"
+        body: "{{ lookup('ansible.builtin.file', 'adaptiveCard.json') }}"
         status_code: 200
         body_format: json
       when: not test
