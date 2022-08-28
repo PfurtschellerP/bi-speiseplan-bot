@@ -51,7 +51,8 @@
                             "text": "Karte Heute",
                             "weight": "Bolder",
                             "size": "Large",
-                            "fontType": "Monospace"
+                            "fontType": "Monospace",
+                            "color": "Accent"
                         },
                         {% for gericht in essen_heute %}
                         {
@@ -77,8 +78,7 @@
                             "separator": true
                         }{%if loop.index < essen_heute | length %},{% endif %}
                         {% endfor %}
-                    ],
-                    "separator": true
+                    ]
                 },
                 {
                     "type": "Container",
@@ -88,7 +88,7 @@
                             "columns": [
                                 {
                                     "type": "Column",
-                                    "width": 80,
+                                    "width": 90,
                                     "items": [
                                         {
                                             "type": "TextBlock",
@@ -100,11 +100,11 @@
                                 },
                                 {
                                     "type": "Column",
-                                    "width": 20,
+                                    "width": 10,
                                     "items": [
                                         {
                                             "type": "Image",
-                                            "url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                                            "url": "https://pngimg.com/uploads/github/github_PNG80.png",
                                             "selectAction": {
                                                 "type": "Action.OpenUrl",
                                                 "url": "https://github.com/PfurtschellerP/bi-speiseplan-bot/issues"
