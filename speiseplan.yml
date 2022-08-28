@@ -2,7 +2,12 @@
 - name: Speiseplan Benachrichtigung
   hosts: all
   connection: local
-  # gather_facts: false
+  vars:
+    test: '{{ TEST | bool | default(false) }}'
+    override:
+      tag: 'OVERRIDE_TAG | default("")'
+      monat: 'OVERRIDE_MONAT | default("")'
+      jahr: 'OVERRIDE_JAHR | default("")'
 
   tasks:
     - name: Hole die Plan Daten
@@ -40,10 +45,11 @@
 
     - name: Temporärer Override des Datums
       ansible.builtin.set_fact:
-        datum_heute: '2022-08-29T00:00:00'
-        jahr_heute: '2022'
-        monat_heute: '08'
-        tag_heute: '29'
+        jahr_heute: '{{ override.jahr }}'
+        monat_heute: '{{ override.monat }}'
+        tag_heute: '{{ override.tag }}'
+        datum_heute: '{{ override.jahr }}-{{ override.monat }}-{{ override.tag }}T00:00:00'
+      when: test
 
     - name: Extrahiere heutige Gerichte
       ansible.builtin.set_fact:
@@ -77,6 +83,7 @@
           - ./adaptiveCard.json
         charset: utf-8
       delegate_to: localhost
+      when: test
 
     - name: Sende den Speiseplan an MS Teams
       ansible.builtin.uri:
@@ -85,3 +92,4 @@
         body: "{{ lookup('ansible.builtin.file','adaptiveCard.json') }}"
         status_code: 200
         body_format: json
+      when: not test
