@@ -34,6 +34,21 @@
       ansible.builtin.set_fact:
         mir2: '{{ mir2[0] }}'
 
+    - name: Hole das Plan PDF
+      ansible.builtin.uri:
+        url: https://boehringer.webspeiseplan.de/index.php?token=2fda60f9e49030893165d438b7b4e946&request=pdf&menu=2058&time={{ ansible_date_time["epoch"] }}000&lang=1&cw={{ ansible_date_time.weeknumber }}"
+        method: GET
+        return_content: true
+        validate_certs: false
+        headers:
+          Host: boehringer.webspeiseplan.de
+          Referer: https://boehringer.webspeiseplan.de/Menu
+      register: plan_pdf
+
+    - name: Extrahiere Plan URL
+      ansible.builtin.set_fact:
+        planURL: '{{ plan_pdf.content }}'
+
     - name: Hole den aktuellen Tag
       ansible.builtin.set_fact:
         datum_heute: '{{ ansible_date_time["iso8601"].split("T")[0] }}T00:00:00'

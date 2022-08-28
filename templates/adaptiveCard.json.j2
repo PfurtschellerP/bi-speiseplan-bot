@@ -30,6 +30,17 @@
                     "url": "{{ giphy_image }}"
                 },
                 {
+                    "type": "ActionSet",
+                    "actions": [
+                        {
+                            "type": "Action.OpenUrl",
+                            "url": "{{ planURL }}",
+                            "title": "Link zum vollständigen Plan",
+                            "iconUrl": "https://res-1.cdn.office.net/files/fabric-cdn-prod_20211207.001/assets/item-types/32_2x/pdf.png"
+                        }
+                    ]
+                },
+                {
                     "type": "TextBlock",
                     "wrap": true,
                     "text": "Karte Heute",

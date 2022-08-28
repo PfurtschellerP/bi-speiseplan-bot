@@ -77,6 +77,8 @@ def main():
 
   speiseplan = getPlanInfo()
 
+  print(getPlanURL(34))
+
   # planName = f'speiseplan_kw{ weekNumber }.pdf'
 
   # downloadPlan(speiseplanURL, planName)
