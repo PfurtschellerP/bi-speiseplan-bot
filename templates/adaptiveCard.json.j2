@@ -1,114 +1,124 @@
 {
-    "type": "AdaptiveCard",
-    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-    "version": "1.5",
-    "msTeams": {
-        "width": "full"
-    },
-    "body": [
+  "type": "message",
+  "attachments": [
+    {
+      "contentType": "application/vnd.microsoft.card.adaptive",
+      "contentUrl": null,
+      "content": 
         {
-            "type": "TextBlock",
-            "text": "Speiseplan",
-            "wrap": true,
-            "size": "ExtraLarge",
-            "weight": "Bolder",
-            "color": "Good",
-            "fontType": "Monospace"
-        },
-        {
-            "type": "TextBlock",
-            "wrap": true,
-            "text": "{{ tag_heute }}.{{ monat_heute }}.{{ jahr_heute }}"
-        },
-        {
-            "type": "Image",
-            "url": "{{ giphy_image }}"
-        },
-        {
-            "type": "ActionSet",
-            "actions": [
+            "type": "AdaptiveCard",
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "version": "1.5",
+            "msTeams": {
+                "width": "full"
+            },
+            "body": [
                 {
-                    "type": "Action.OpenUrl",
-                    "url": "{{ plan_url }}",
-                    "title": "Link zum vollständigen Plan",
-                    "iconUrl": "https://res-1.cdn.office.net/files/fabric-cdn-prod_20211207.001/assets/item-types/32_2x/pdf.png"
-                }
-            ]
-        },
-        {
-            "type": "Container",
-            "items": [
+                    "type": "TextBlock",
+                    "text": "Speiseplan",
+                    "wrap": true,
+                    "size": "ExtraLarge",
+                    "weight": "Bolder",
+                    "color": "Good",
+                    "fontType": "Monospace"
+                },
                 {
                     "type": "TextBlock",
                     "wrap": true,
-                    "text": "Karte Heute",
-                    "weight": "Bolder",
-                    "size": "Large",
-                    "fontType": "Monospace"
+                    "text": "{{ tag_heute }}.{{ monat_heute }}.{{ jahr_heute }}"
                 },
-                {% for gericht in essen_heute %}
+                {
+                    "type": "Image",
+                    "url": "{{ giphy_image }}"
+                },
+                {
+                    "type": "ActionSet",
+                    "actions": [
+                        {
+                            "type": "Action.OpenUrl",
+                            "url": "{{ plan_url }}",
+                            "title": "Link zum vollständigen Plan",
+                            "iconUrl": "https://res-1.cdn.office.net/files/fabric-cdn-prod_20211207.001/assets/item-types/32_2x/pdf.png"
+                        }
+                    ]
+                },
                 {
                     "type": "Container",
                     "items": [
                         {
                             "type": "TextBlock",
                             "wrap": true,
-                            "text": "{{ gericht.gericht_name }}",
-                            "fontType": "Monospace",
-                            "size": "Medium",
-                            "weight": "Bolder"
+                            "text": "Karte Heute",
+                            "weight": "Bolder",
+                            "size": "Large",
+                            "fontType": "Monospace"
                         },
+                        {% for gericht in essen_heute %}
                         {
-                            "type": "TextBlock",
-                            "wrap": true,
-                            "horizontalAlignment": "Right",
-                            "text": "{{ gericht.preis }}",
-                            "fontType": "Monospace",
-                            "size": "Default"
-                        }
-                    ]
-                }{%if loop.index < essen_heute | length %},{% endif %}
-                {% endfor %}
-            ],
-            "separator": true
-        },
-        {
-            "type": "Container",
-            "items": [
-                {
-                    "type": "ColumnSet",
-                    "columns": [
-                        {
-                            "type": "Column",
-                            "width": 80,
+                            "type": "Container",
                             "items": [
                                 {
                                     "type": "TextBlock",
-                                    "text": "Bei weiteren Ideen und Änderungswünschen einfach ein Issue auf machen",
                                     "wrap": true,
-                                    "isSubtle": true
+                                    "text": "{{ gericht.gericht_name }}",
+                                    "fontType": "Monospace",
+                                    "size": "Medium",
+                                    "weight": "Bolder"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "wrap": true,
+                                    "horizontalAlignment": "Right",
+                                    "text": "{{ gericht.preis }}",
+                                    "fontType": "Monospace",
+                                    "size": "Default"
                                 }
                             ]
-                        },
+                        }{%if loop.index < essen_heute | length %},{% endif %}
+                        {% endfor %}
+                    ],
+                    "separator": true
+                },
+                {
+                    "type": "Container",
+                    "items": [
                         {
-                            "type": "Column",
-                            "width": 20,
-                            "items": [
+                            "type": "ColumnSet",
+                            "columns": [
                                 {
-                                    "type": "Image",
-                                    "url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-                                    "selectAction": {
-                                        "type": "Action.OpenUrl",
-                                        "url": "https://github.com/PfurtschellerP/bi-speiseplan-bot/issues"
-                                    },
-                                    "size": "Small"
+                                    "type": "Column",
+                                    "width": 80,
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Bei weiteren Ideen und Änderungswünschen einfach ein Issue auf machen",
+                                            "wrap": true,
+                                            "isSubtle": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Column",
+                                    "width": 20,
+                                    "items": [
+                                        {
+                                            "type": "Image",
+                                            "url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                                            "selectAction": {
+                                                "type": "Action.OpenUrl",
+                                                "url": "https://github.com/PfurtschellerP/bi-speiseplan-bot/issues"
+                                            },
+                                            "size": "Small"
+                                        }
+                                    ]
                                 }
                             ]
                         }
                     ]
                 }
-            ]
+            ],
+            "verticalContentAlignment": "Top"
         }
-    ],
-    "verticalContentAlignment": "Top"
+    }
+  ]
 }
