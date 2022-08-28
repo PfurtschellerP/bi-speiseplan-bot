@@ -11,6 +11,8 @@
       jahr: '{{ OVERRIDE_JAHR | default("") }}'
 
   tasks:
+    # 1) Hole und reinige die Plan Daten
+    # -------------------------------------------------------------------------
     - name: Hole die Plan Daten
       ansible.builtin.uri:
         url: https://boehringer.webspeiseplan.de/index.php?token=2fda60f9e49030893165d438b7b4e946&model=menu&location=1100&languagetype=1&time={{ ansible_date_time["epoch"] }}000
@@ -67,7 +69,24 @@
           }}
       with_items: '{{ gericht_daten | list }}'
       when: item.speiseplanAdvancedGericht.datum == datum_heute
+    # -------------------------------------------------------------------------
 
+    # 2) Hole ein tagesaktuelles Gif von Giphy
+    # -------------------------------------------------------------------------
+    - name: Hole neues Gif von Giphy
+      ansible.builtin.uri:
+        url: 'https://api.giphy.com/v1/gifs/search?api_key={{ api_key }}&limit=1&q=essen'
+        return_content: true
+        validate_certs: false
+      register: giphy
+
+    - name: Hole Inhalt
+      ansible.builtin.set_fact:
+        giphy_image: '{{ (giphy.content | from_json).data[0].images.original.url }}'
+    # -------------------------------------------------------------------------
+
+    # 3) Erste das JSON Payload für die Teams Nachricht und sende ihn entweder per mail (test) oder an MS Teams
+    # -------------------------------------------------------------------------
     - name: Create Adaptive Card
       ansible.builtin.template:
         src: 'adaptiveCard.json.j2'
@@ -99,3 +118,4 @@
         status_code: 200
         body_format: json
       when: not test
+    # -------------------------------------------------------------------------
