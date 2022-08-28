@@ -63,7 +63,7 @@
 
     - name: Send mir eine Email mit der Speiseplan adaptive card
       community.general.mail:
-        host: '{{ smtp_host }}'
+        host: '{{ smtp_server }}'
         port: '{{ smtp_port }}'
         subject: Speiseplan
         username: '{{ smtp_user }}'
