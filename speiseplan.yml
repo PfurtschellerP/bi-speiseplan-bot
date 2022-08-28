@@ -12,4 +12,4 @@
   tasks:
     - name: Binde Tasks ein, wenn heute ein Wochentag ist
       ansible.builtin.include_tasks: 'tasks.yml'
-      when: ( ansible_date_time.weekday_number > 0 and ansible_date_time.weekday_number < 6 ) or time_override
+      when: (( ansible_date_time.weekday_number > 0 and ansible_date_time.weekday_number < 6 ) or time_override)
