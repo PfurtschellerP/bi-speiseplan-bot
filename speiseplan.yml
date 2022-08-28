@@ -108,7 +108,7 @@
         giphy_image: '{{ giphy.json.data[0].images.original.url }}'
     # -------------------------------------------------------------------------
 
-    # 3) Erste das JSON Payload für die Teams Nachricht und sende ihn entweder per mail (test) oder an MS Teams
+    # 3) Erstelle das JSON Payload für die Teams Nachricht und sende ihn entweder per mail (test) oder an MS Teams
     # -------------------------------------------------------------------------
     - name: Create Adaptive Card
       ansible.builtin.template:
