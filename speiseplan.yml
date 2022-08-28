@@ -69,6 +69,7 @@
         subject: Speiseplan
         username: '{{ smtp_user }}'
         password: '{{ smtp_pass }}'
+        from: no-reply@pfurtscheller.org (AWX)
         body: Hallo, hier ist der Speiseplan
         to:
           - Patrick Pfurtscheller <patrick@pfurtscheller.org>
