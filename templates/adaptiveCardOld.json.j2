@@ -1,0 +1,80 @@
+{
+  "type": "message",
+  "attachments": [
+    {
+      "contentType": "application/vnd.microsoft.card.adaptive",
+      "contentUrl": null,
+      "content": 
+        {
+            "type": "AdaptiveCard",
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "version": "1.4",
+            "msTeams": { "width": "full" },
+            "body": [
+                {
+                    "type": "TextBlock",
+                    "text": "Speiseplan",
+                    "wrap": true,
+                    "size": "ExtraLarge",
+                    "weight": "Bolder",
+                    "color": "Good",
+                    "fontType": "Monospace"
+                },
+                {
+                    "type": "TextBlock",
+                    "wrap": true,
+                    "text": "{{ tag_heute }}.{{ monat_heute }}.{{ jahr_heute }}"
+                },
+                {
+                    "type": "Image",
+                    "url": "{{ giphy_image }}"
+                },
+                {
+                    "type": "ActionSet",
+                    "actions": [
+                        {
+                            "type": "Action.OpenUrl",
+                            "url": "{{ planURL }}",
+                            "title": "Link zum vollständigen Plan",
+                            "iconUrl": "https://res-1.cdn.office.net/files/fabric-cdn-prod_20211207.001/assets/item-types/32_2x/pdf.png"
+                        }
+                    ]
+                },
+                {
+                    "type": "TextBlock",
+                    "wrap": true,
+                    "text": "Karte Heute",
+                    "weight": "Bolder",
+                    "size": "Large",
+                    "fontType": "Monospace"
+                },
+                {% for gericht in essen_heute %}
+                {
+                    "type": "Container",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "wrap": true,
+                            "text": "{{ gericht.gericht_name }}",
+                            "fontType": "Monospace",
+                            "size": "Medium",
+                            "weight": "Bolder"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "wrap": true,
+                            "horizontalAlignment": "Right",
+                            "text": "{{ gericht.preis }}",
+                            "fontType": "Monospace",
+                            "size": "Default"
+                        }
+                    ],
+                    "separator": true
+                }{%if loop.index < essen_heute | length %},{% endif %}
+                {% endfor %}
+            ],
+            "verticalContentAlignment": "Top"
+        }
+    }
+  ]
+}
