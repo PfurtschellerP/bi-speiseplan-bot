@@ -25,7 +25,8 @@
                 {
                     "type": "TextBlock",
                     "wrap": true,
-                    "text": "{{ tag_heute }}.{{ monat_heute }}.{{ jahr_heute }}"
+                    "text": "{{ tag_heute }}.{{ monat_heute }}.{{ jahr_heute }}",
+                    "isSubtle": true
                 },
                 {
                     "type": "Image",
@@ -60,9 +61,14 @@
                             "items": [
                                 {
                                     "type": "TextBlock",
+                                    "text": "{{ gericht_kategorien_objekt[gericht.gerichtkategorieID] }}",
+                                    "wrap": true
+                                },
+                                {
+                                    "type": "TextBlock",
                                     "wrap": true,
                                     "text": "{{ gericht.gericht_name }}",
-                                    "fontType": "Monospace",
+                                    "fontType": "Default",
                                     "size": "Medium",
                                     "weight": "Bolder"
                                 },
@@ -71,7 +77,7 @@
                                     "wrap": true,
                                     "horizontalAlignment": "Right",
                                     "text": "{{ gericht.preis }}",
-                                    "fontType": "Monospace",
+                                    "fontType": "Default",
                                     "size": "Default"
                                 }
                             ],
