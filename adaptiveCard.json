@@ -1,0 +1,154 @@
+{
+  "type": "message",
+  "attachments": [
+    {
+      "contentType": "application/vnd.microsoft.card.adaptive",
+      "contentUrl": null,
+      "content": {
+        "type": "AdaptiveCard",
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "version": "1.5",
+        "msTeams": {
+          "width": "full"
+        },
+        "body": [
+          {
+            "type": "TextBlock",
+            "text": "Speiseplan",
+            "wrap": true,
+            "size": "ExtraLarge",
+            "weight": "Bolder",
+            "color": "Good",
+            "fontType": "Monospace"
+          },
+          {
+            "type": "TextBlock",
+            "wrap": true,
+            "text": "{{ tag_heute }}.{{ monat_heute }}.{{ jahr_heute }}",
+            "isSubtle": true
+          },
+          {
+            "type": "Image",
+            "url": "{{ giphy_image }}"
+          },
+          {
+            "type": "ActionSet",
+            "actions": [
+              {
+                "type": "Action.OpenUrl",
+                "url": "{{ plan_url }}",
+                "title": "Link zum vollständigen Plan",
+                "iconUrl": "https://res-1.cdn.office.net/files/fabric-cdn-prod_20211207.001/assets/item-types/32_2x/pdf.png"
+              }
+            ]
+          },
+          {
+            "type": "Container",
+            "items": [
+              {
+                "type": "TextBlock",
+                "wrap": true,
+                "text": "Karte Heute",
+                "weight": "Bolder",
+                "size": "Large",
+                "fontType": "Monospace",
+                "color": "Accent"
+              },
+              {% for gericht in essen_heute %}
+              {
+                "type": "Container",
+                "items": [
+                  {
+                    "type": "TextBlock",
+                    "text": "{{ gericht_kategorien_objekt[gericht.gerichtkategorieID] }}",
+                    "fontType": "Default",
+                    "size": "Default",
+                    "isSubtle": true,
+                    "wrap": true
+                  },
+                  {
+                    "type": "ColumnSet",
+                    "columns": [
+                      {
+                        "type": "Column",
+                        "items": [
+                          {
+                            "type": "TextBlock",
+                            "wrap": true,
+                            "text": "{{ gericht.gericht_name }}",
+                            "size": "Medium",
+                            "weight": "Bolder",
+                            "separator": true
+                          }
+                        ],
+                        "width": 90
+                      },
+                      {
+                        "type": "Column",
+                        "width": 10,
+                        "items": [
+                          {
+                            "type": "TextBlock",
+                            "horizontalAlignment": "Right",
+                            "text": "{{ gericht.preis }}",
+                            "size": "Default",
+                            "wrap": true
+                          }
+                        ],
+                        "minHeight": "1px",
+                        "horizontalAlignment": "Left"
+                      }
+                    ],
+                    "spacing": "Small",
+                    "separator": true
+                  }
+                ],
+                "separator": true
+              }{%if loop.index < essen_heute | length %},{% endif %}
+              {% endfor %}
+            ]
+          },
+          {
+            "type": "Container",
+            "items": [
+              {
+                "type": "ColumnSet",
+                "columns": [
+                  {
+                    "type": "Column",
+                    "width": 90,
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "text": "Bei weiteren Ideen und Änderungswünschen einfach ein Issue auf machen",
+                        "wrap": true,
+                        "isSubtle": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Column",
+                    "width": 10,
+                    "items": [
+                      {
+                        "type": "Image",
+                        "url": "https://pngimg.com/uploads/github/github_PNG80.png",
+                        "selectAction": {
+                          "type": "Action.OpenUrl",
+                          "url": "https://github.com/PfurtschellerP/bi-speiseplan-bot/issues"
+                        },
+                        "size": "Small",
+                        "horizontalAlignment": "Right"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "verticalContentAlignment": "Top"
+      }
+    }
+  ]
+}
