@@ -66,10 +66,6 @@
 
     - name: DEBUG
       ansible.builtin.debug:
-        var: plan_pdf
-
-    - name: DEBUG
-      ansible.builtin.debug:
         var: plan_url
 
     - name: Hole den aktuellen Tag
@@ -102,7 +98,8 @@
         essen_heute: |
           {{ essen_heute | default([]) + [{
               "gericht_name":item.speiseplanAdvancedGericht.gerichtname,
-              "preis": (item.zusatzinformationen.mitarbeiterpreisDecimal2 |string).replace(".", ",")+"€"
+              "preis": (item.zusatzinformationen.mitarbeiterpreisDecimal2 |string).replace(".", ",")+"€",
+              "gerichtkategorieID":item.speiseplanAdvancedGericht.gerichtkategorieID
             }]
           }}
       with_items: '{{ gericht_daten | list }}'
