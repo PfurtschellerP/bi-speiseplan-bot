@@ -47,7 +47,7 @@
     - name: Transformiere die Gericht Kategorien zu einfachen Objekten
       ansible.builtin.set_fact:
         gericht_kategorien_objekt: '{{ gericht_kategorien_objekt | default({}) | combine({item.gerichtkategorieID: item.name}) }}'
-      with_list: '{{ gericht_kategorien_liste.json }}'
+      with_list: '{{ gericht_kategorien_liste.json.content }}'
 
     - name: Hole das Plan PDF
       ansible.builtin.uri:
