@@ -113,7 +113,7 @@
     # -------------------------------------------------------------------------
     - name: Generiere Zufällige Nummer für das offset bei Giffy
       ansible.builtin.set_fact:
-        offset: '{{ 100 | random }}'
+        offset: '{{ 20 | random }}'
 
     - name: Hole neues Gif von Giphy
       ansible.builtin.uri:
