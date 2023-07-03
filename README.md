@@ -1,4 +1,4 @@
-# BI Speiseplan Bot
+# BI Speiseplan Bot (Deprecated)
 
 Dieser "Bot" nutzt Ansible um täglich den aktuellen Speiseplan für herunterzuladen und via Teams Webhook bereitzustellen.
 
